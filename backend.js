@@ -35,6 +35,22 @@ const Book = sequelize.define("book", {
   },
 });
 
+const User = sequelize.define("user", {
+  user_id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  username: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  password: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+});
+
 // create the books table if it doesn't exist
 sequelize.sync(); //CREATE TABLE IF NOT EXISTS
 
@@ -120,6 +136,8 @@ app.delete("/books/:id", (req, res) => {
       res.status(500).send(err);
     });
 });
+
+app.get("/register/:id", (req, res) => {});
 
 // start the server
 const port = process.env.PORT || 3000;

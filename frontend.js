@@ -2,6 +2,7 @@
 // requires: npm install express ejs axios body-parser
 
 const express = require("express");
+const session = require("express-session");
 const axios = require("axios");
 const path = require("path");
 const app = express();
@@ -20,6 +21,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // Serve static files
 app.use(express.static(__dirname + "/public"));
+
+app.use(
+  session({
+    secret: "key cookie",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
 app.get("/", async (req, res) => {
   try {
