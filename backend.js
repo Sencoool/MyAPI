@@ -137,7 +137,34 @@ app.delete("/books/:id", (req, res) => {
     });
 });
 
-app.get("/register/:id", (req, res) => {});
+app.post("/register", async (req, res) => {
+  User.create(req.body)
+    .then((user) => {
+      res.send(user);
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
+});
+
+app.post("/login", async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const login = await User.findOne({ where: { username } });
+    console.log(login + "Welcome");
+    if (!login) {
+      console.log("Username is wrong");
+      return res.json({ sign: "Username" });
+    } else if (login.password !== password) {
+      console.log("Password is wrong", login);
+      return res.json({ sign: "Password" });
+    }
+
+    res.json({ sign: true, login });
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
 
 // start the server
 const port = process.env.PORT || 3000;

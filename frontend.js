@@ -96,6 +96,62 @@ app.get("/delete/:id", async (req, res) => {
   }
 });
 
+app.get("/register", (req, res) => {
+  try {
+    res.render("register");
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+app.post("/register", async (req, res) => {
+  try {
+    const data = {
+      username: req.body.username,
+      password: req.body.password,
+    };
+
+    await axios.post(base_url + "/register", data);
+    res.redirect("/");
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+app.get("/login", (req, res) => {
+  try {
+    res.render("login");
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+app.post("/login", async (req, res) => {
+  try {
+    const data = {
+      username: req.body.username,
+      password: req.body.password,
+    };
+
+    const response = await axios.post(base_url + "/login", data);
+
+    if (response.data.sign == true) {
+      console.log(response.data.login.username, "Login Successful");
+      res.redirect("/");
+    } else if (response.data.sign == "Username") {
+      console.log("Username is Wrong");
+      res.redirect("login");
+    } else if (response.data.sign == "Password") {
+      console.log("Password is Wrong");
+      res.redirect("login");
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("error in login");
+    res.redirect("/");
+  }
+});
+
 app.listen(5500, () => {
   console.log("Example app listening at http://localhost:5500");
 });
