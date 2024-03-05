@@ -6,6 +6,7 @@ const session = require("express-session");
 const axios = require("axios");
 const path = require("path");
 const app = express();
+const cookie = require("cookie-parser");
 var bodyParser = require("body-parser");
 
 // Base URL for the API
@@ -21,19 +22,43 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // Serve static files
 app.use(express.static(__dirname + "/public"));
-
+app.use(cookie());
 app.use(
   session({
-    secret: "key cookie",
+    secret: "I don't know either",
     resave: false,
     saveUninitialized: false,
   })
 );
 
+const authenticateUser = (req, res, next) => {
+  if (req.cookies && req.cookies.userSession) {
+    next();
+  } else {
+    res.redirect("/login");
+  }
+};
+
 app.get("/", async (req, res) => {
   try {
     const response = await axios.get(base_url + "/books");
-    res.render("books", { books: response.data });
+
+    // if (!req.session.userData) {
+    //   req.session.userData.userName = {
+    //     userName: "", !!! this one error !!!
+    //   };
+    // }
+
+    if (!req.session.userData) {
+      req.session.userData = {
+        userName: "",
+      };
+    }
+
+    res.render("books", {
+      books: response.data,
+      data: req.session.userData,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).send("Error Access ROOT");
@@ -50,7 +75,7 @@ app.get("/book/:id", async (req, res) => {
   }
 });
 
-app.get("/create", (req, res) => {
+app.get("/create", authenticateUser, (req, res) => {
   res.render("create");
 });
 
@@ -65,7 +90,7 @@ app.post("/create", async (req, res) => {
   }
 });
 
-app.get("/update/:id", async (req, res) => {
+app.get("/update/:id", authenticateUser, async (req, res) => {
   try {
     const response = await axios.get(base_url + "/books/" + req.params.id);
     res.render("update", { book: response.data });
@@ -86,7 +111,7 @@ app.post("/update/:id", async (req, res) => {
   }
 });
 
-app.get("/delete/:id", async (req, res) => {
+app.get("/delete/:id", authenticateUser, async (req, res) => {
   try {
     await axios.delete(base_url + "/books/" + req.params.id);
     res.redirect("/");
@@ -137,6 +162,12 @@ app.post("/login", async (req, res) => {
 
     if (response.data.sign == true) {
       console.log(response.data.login.username, "Login Successful");
+
+      req.session.userData = {
+        user_id: response.data.login.user_id,
+        username: response.data.login.username,
+      };
+      console.log(req.session.userData);
       res.redirect("/");
     } else if (response.data.sign == "Username") {
       console.log("Username is Wrong");
@@ -148,6 +179,18 @@ app.post("/login", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send("error in login");
+    res.redirect("/");
+  }
+});
+
+app.get("/logout", (req, res) => {
+  try {
+    console.log(req.session.userData, "Goodbye");
+    req.session.userData = null;
+    res.redirect("/");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("error in /logout");
     res.redirect("/");
   }
 });
