@@ -67,8 +67,8 @@ const User = sequelize.define("user", {
 });
 
 // create the books table if it doesn't exist
-sequelize.sync({}); //CREATE TABLE IF NOT EXISTS
-// sequelize.sync({ force: true }); //CREATE NEW TABLE EVERY TIME U RUN
+// sequelize.sync({}); //CREATE TABLE IF NOT EXISTS
+sequelize.sync({ force: true }); //CREATE NEW TABLE EVERY TIME U RUN
 
 // route to get all books
 app.get("/books", async (req, res) => {
