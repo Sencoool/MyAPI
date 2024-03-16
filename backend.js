@@ -11,10 +11,16 @@ const app = express();
 // parse incoming requests
 app.use(express.json());
 
+// const sequelize = new Sequelize("database", "username", "password", {
+//   host: "localhost",
+//   dialect: "sqlite",
+//   storage: "./Database/SQBooks.sqlite",
+// });
+
 // create a connection to the database
 const sequelize = new Sequelize("database", "username", "password", {
-  host: "localhost",
-  dialect: "sqlite",
+  host: "localhost", // could be "/var/run/postgresql", "192.168.1.100", "your-database-host.com" up 2 where u want to run on
+  dialect: "sqlite", //SQL Type Ex. sqlite,mysql,postgressql,oracle,maria
   storage: "./Database/SQBooks.sqlite",
 });
 
@@ -53,6 +59,7 @@ const User = sequelize.define("user", {
 
 // create the books table if it doesn't exist
 sequelize.sync(); //CREATE TABLE IF NOT EXISTS
+// sequelize.sync({ force: true }); //CREATE NEW TABLE EVERY TIME U RUN
 
 // route to get all books
 app.get("/books", (req, res) => {

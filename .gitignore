@@ -1,2 +1,5 @@
 .env
 node_modules/
+Database/
+
+#gitignore can only ignore things that aren't commit in respo yet
