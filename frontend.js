@@ -7,6 +7,7 @@ const axios = require("axios");
 const path = require("path");
 const app = express();
 const cookie = require("cookie-parser");
+const fs = require("fs");
 var bodyParser = require("body-parser");
 
 // Base URL for the API
@@ -48,6 +49,13 @@ app.get("/", async (req, res) => {
     //     userName: "", !!! this one error !!!
     //   };
     // }
+    console.log(response);
+
+    if (response.data == "") {
+      //checking if data was already creating
+      const books = JSON.parse(fs.readFileSync("books.json", "utf8"));
+      await axios.post(base_url + "/books", { bug: books });
+    }
 
     if (!req.session.userData) {
       req.session.userData = {

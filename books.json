@@ -1,12 +1,10 @@
 [
   {
-    "title": "หนังสือเล่ม 1",
-    "author": "ผู้เขียน 1",
-    "price": 100
+    "title": "Godzilla",
+    "author": "Jason Momoa"
   },
   {
-    "title": "หนังสือเล่ม 2",
-    "author": "ผู้เขียน 2",
-    "price": 200
+    "title": "Dune part 98",
+    "author": "Paul Atredes"
   }
 ]

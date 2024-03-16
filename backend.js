@@ -9,13 +9,22 @@ const Sequelize = require("sequelize");
 const app = express();
 
 // parse incoming requests
-app.use(express.json());
+app.use(express.json()); // Json middleware which converts the body to JSON
 
 // const sequelize = new Sequelize("database", "username", "password", {
 //   host: "localhost",
 //   dialect: "sqlite",
 //   storage: "./Database/SQBooks.sqlite",
 // });
+
+// const initMySQL = async () => {
+//   conn = await mysql.createConnection({
+//     host: "localhost",
+//     user: "username",
+//     password: "password",
+//     database: "database",
+//   });
+// };
 
 // create a connection to the database
 const sequelize = new Sequelize("database", "username", "password", {
@@ -58,19 +67,26 @@ const User = sequelize.define("user", {
 });
 
 // create the books table if it doesn't exist
-sequelize.sync(); //CREATE TABLE IF NOT EXISTS
+sequelize.sync({}); //CREATE TABLE IF NOT EXISTS
 // sequelize.sync({ force: true }); //CREATE NEW TABLE EVERY TIME U RUN
 
 // route to get all books
-app.get("/books", (req, res) => {
-  Book.findAll()
-    .then((books) => {
-      // same with Select * from but command here is Sequelize builtin
-      res.json(books); //.then async await
-    })
-    .catch((err) => {
-      res.status(500).send(err);
-    });
+app.get("/books", async (req, res) => {
+  try {
+    // const [books] = await conn.query("SELECT * from books");
+    // res
+    //   .json(book)
+    Book.findAll()
+      .then((books) => {
+        // same with Select * from but command here is Sequelize builtin
+        res.json(books); //.then async await
+      })
+      .catch((err) => {
+        res.status(500).send(err);
+      });
+  } catch (err) {
+    res.status(500).send(err);
+  }
 });
 
 // route to get a book by id
@@ -89,14 +105,21 @@ app.get("/books/:id", (req, res) => {
 });
 
 // route to create a new book
-app.post("/books", (req, res) => {
-  Book.create(req.body)
-    .then((book) => {
-      res.send(book);
-    })
-    .catch((err) => {
-      res.status(500).send(err);
-    });
+app.post("/books", async (req, res) => {
+  for (let i = 0; i < req.body.bug.length; i++) {
+    await Book.create(req.body.bug[i])
+      .then(() => {})
+      .catch((err) => {
+        res.json(err);
+      });
+  }
+  // Book.create(req.body)
+  //   .then((book) => {
+  //     res.send(book);
+  //   })
+  //   .catch((err) => {
+  //     res.status(500).send(err);
+  //   });
 });
 
 // route to update a book
@@ -175,6 +198,7 @@ app.post("/login", async (req, res) => {
 
 // start the server
 const port = process.env.PORT || 3000;
-app.listen(port, () =>
-  console.log(`Example app listening at http://localhost:${port}`)
-);
+app.listen(port, async () => {
+  // await initMySQL();
+  console.log(`Example app listening at http://localhost:${port}`);
+});
