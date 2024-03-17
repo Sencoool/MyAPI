@@ -99,7 +99,7 @@ const User = sequelize.define("user", {
 });
 
 // create the books table if it doesn't exist
-sequelize.sync({ force: true }); //CREATE TABLE IF NOT EXISTS
+sequelize.sync({}); //CREATE TABLE IF NOT EXISTS
 // sequelize.sync({ force: true }); //CREATE NEW TABLE EVERY TIME U RUN
 // force: true, alter: true, match: true
 
