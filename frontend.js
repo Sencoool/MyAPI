@@ -43,18 +43,19 @@ const authenticateUser = (req, res, next) => {
 app.get("/", async (req, res) => {
   try {
     const response = await axios.get(base_url + "/books");
-
-    // if (!req.session.userData) {
-    //   req.session.userData.userName = {
-    //     userName: "", !!! this one error !!!
-    //   };
-    // }
+    const responsePBH = await axios.get(base_url + "/publisher");
     console.log(response);
 
     if (response.data == "") {
-      //checking if data was already creating
-      const books = JSON.parse(fs.readFileSync("books.json", "utf8"));
-      await axios.post(base_url + "/books", { bug: books });
+      const databooks = JSON.parse(fs.readFileSync("books.json", "utf8"));
+      await axios.post(base_url + "/books", { bug: databooks });
+    }
+
+    if (responsePBH.data == "") {
+      const datapublisher = JSON.parse(
+        fs.readFileSync("publisher.json", "utf8")
+      );
+      await axios.post(base_url + "/publisher", { pbh: datapublisher });
     }
 
     if (!req.session.userData) {
@@ -68,8 +69,7 @@ app.get("/", async (req, res) => {
       data: req.session.userData,
     });
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Error Access ROOT");
+    res.status(500).send(err);
   }
 });
 
@@ -145,7 +145,7 @@ app.post("/register", async (req, res) => {
     };
 
     await axios.post(base_url + "/register", data);
-    res.redirect("/");
+    res.redirect("login");
   } catch (err) {
     console.error(err);
   }

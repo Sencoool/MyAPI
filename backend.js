@@ -50,6 +50,38 @@ const Book = sequelize.define("book", {
   },
 });
 
+const Publisher = sequelize.define("publisher", {
+  publisher_id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  publisher: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  address: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+});
+
+const Like = sequelize.define("like", {
+  like_id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  book_id: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+  },
+  user_id: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+  },
+});
+
 const User = sequelize.define("user", {
   user_id: {
     type: Sequelize.INTEGER,
@@ -67,26 +99,18 @@ const User = sequelize.define("user", {
 });
 
 // create the books table if it doesn't exist
-// sequelize.sync({}); //CREATE TABLE IF NOT EXISTS
-sequelize.sync({ force: true }); //CREATE NEW TABLE EVERY TIME U RUN
+sequelize.sync({ force: true }); //CREATE TABLE IF NOT EXISTS
+// sequelize.sync({ force: true }); //CREATE NEW TABLE EVERY TIME U RUN
+// force: true, alter: true, match: true
 
-// route to get all books
-app.get("/books", async (req, res) => {
-  try {
-    // const [books] = await conn.query("SELECT * from books");
-    // res
-    //   .json(book)
-    Book.findAll()
-      .then((books) => {
-        // same with Select * from but command here is Sequelize builtin
-        res.json(books); //.then async await
-      })
-      .catch((err) => {
-        res.status(500).send(err);
-      });
-  } catch (err) {
-    res.status(500).send(err);
-  }
+app.get("/books", (req, res) => {
+  Book.findAll()
+    .then((data) => {
+      res.json(data);
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
 });
 
 // route to get a book by id
@@ -104,22 +128,24 @@ app.get("/books/:id", (req, res) => {
     });
 });
 
-// route to create a new book
 app.post("/books", async (req, res) => {
-  for (let i = 0; i < req.body.bug.length; i++) {
-    await Book.create(req.body.bug[i])
-      .then(() => {})
+  if (req.body.hasOwnProperty("bug")) {
+    for (let i = 0; i < req.body.bug.length; i++) {
+      await Book.create(req.body.bug[i])
+        .then(() => {})
+        .catch((err) => {
+          res.json(err);
+        });
+    }
+  } else {
+    Book.create(req.body)
+      .then((book) => {
+        res.send(book);
+      })
       .catch((err) => {
-        res.json(err);
+        res.status(500).send(err);
       });
   }
-  // Book.create(req.body)
-  //   .then((book) => {
-  //     res.send(book);
-  //   })
-  //   .catch((err) => {
-  //     res.status(500).send(err);
-  //   });
 });
 
 // route to update a book
@@ -165,6 +191,36 @@ app.delete("/books/:id", (req, res) => {
     .catch((err) => {
       res.status(500).send(err);
     });
+});
+
+app.get("/publisher", (req, res) => {
+  try {
+    Publisher.findAll()
+      .then((data) => {
+        res.json(data);
+      })
+      .catch((err) => {
+        res.send(err).status(500);
+      });
+  } catch (err) {
+    res.send(err).status(500);
+  }
+});
+
+app.post("/publisher", async (req, res) => {
+  try {
+    if (req.body.hasOwnProperty("pbh")) {
+      for (let i = 0; i < req.body.pbh.length; i++) {
+        await Publisher.create(req.body.pbh[i]).then(() => {});
+      }
+    } else {
+      Publisher.create(req.body).then((data) => {
+        res.json(data);
+      });
+    }
+  } catch (err) {
+    res.send(err).status(500);
+  }
 });
 
 app.post("/register", async (req, res) => {
