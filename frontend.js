@@ -9,6 +9,7 @@ const app = express();
 const cookie = require("cookie-parser");
 const fs = require("fs");
 var bodyParser = require("body-parser");
+const PBH = require("./publisher.json");
 
 // Base URL for the API
 //const base_url = "https://api.example.com";
@@ -52,10 +53,7 @@ app.get("/", async (req, res) => {
     }
 
     if (responsePBH.data == "") {
-      const datapublisher = JSON.parse(
-        fs.readFileSync("publisher.json", "utf8")
-      );
-      await axios.post(base_url + "/publisher", { pbh: datapublisher });
+      await axios.post(base_url + "/publisher", { pbh: PBH });
     }
 
     if (!req.session.userData) {
@@ -80,6 +78,25 @@ app.get("/book/:id", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send("Error id");
+  }
+});
+
+app.get("/bookjoin", async (req, res) => {
+  try {
+    const response = await axios.get(base_url + "/booksjoin");
+
+    if (!req.session.userData) {
+      req.session.userData = {
+        name: "",
+      };
+    }
+
+    res.render("bookjoin", {
+      publisher: response.data,
+      data: req.session.userData,
+    });
+  } catch (err) {
+    res.status(500).send("Error join");
   }
 });
 

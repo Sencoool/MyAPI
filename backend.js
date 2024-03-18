@@ -48,6 +48,10 @@ const Book = sequelize.define("book", {
     type: Sequelize.STRING,
     allowNull: false,
   },
+  publisher_id: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+  },
 });
 
 const Publisher = sequelize.define("publisher", {
@@ -62,22 +66,6 @@ const Publisher = sequelize.define("publisher", {
   },
   address: {
     type: Sequelize.STRING,
-    allowNull: false,
-  },
-});
-
-const Like = sequelize.define("like", {
-  like_id: {
-    type: Sequelize.INTEGER,
-    autoIncrement: true,
-    primaryKey: true,
-  },
-  book_id: {
-    type: Sequelize.INTEGER,
-    allowNull: false,
-  },
-  user_id: {
-    type: Sequelize.INTEGER,
     allowNull: false,
   },
 });
@@ -205,6 +193,19 @@ app.get("/publisher", (req, res) => {
   } catch (err) {
     res.send(err).status(500);
   }
+});
+
+app.get("/booksjoin", (req, res) => {
+  try {
+    Publisher.hasMany(Book, { foreignKey: "publisher_id" });
+    Publisher.findAll({ include: [{ model: Book }] })
+      .then((data) => {
+        res.json(data);
+      })
+      .catch((err) => {
+        res.send(err).status(500);
+      });
+  } catch {}
 });
 
 app.post("/publisher", async (req, res) => {

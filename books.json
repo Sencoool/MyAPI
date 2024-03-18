@@ -1,14 +1,32 @@
 [
   {
     "title": "Godzilla",
-    "author": "Jason Momoa"
+    "author": "Paul Atredes",
+    "publisher_id": "1"
   },
   {
     "title": "Dune part 98",
-    "author": "Paul Atredes"
+    "author": "Paul Atredes",
+    "publisher_id": "2"
   },
   {
     "title": "Manchester United",
-    "author": "Erik Ten Hag"
+    "author": "Erik Ten Hag",
+    "publisher_id": "2"
+  },
+  {
+    "title": "Boku no Hero academia",
+    "author": "Hiroyuki Sawanno",
+    "publisher_id": "1"
+  },
+  {
+    "title": "Fireforce",
+    "author": "Hiroyuki Sawanno",
+    "publisher_id": "3"
+  },
+  {
+    "title": "Bungou Stray Dogs",
+    "author": "Hiroyuki Sawanno",
+    "publisher_id": "3"
   }
 ]

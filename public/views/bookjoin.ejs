@@ -3,29 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Books</title>
+    <title>BookJoin</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    <h1>Books</h1>
+    <h1>BookJoinPublisher</h1>
     <table>
         <tr>
+            <th>Publisher</th>
+            <th>Address</th>
             <th>Title</th>
             <th>Author</th>
-            <th>Actions</th>
         </tr>
-        <% for(var i=0; i < books.length; i++) { %>
+        <% for(let i=0; i < publisher.length; i++) { %>
+            <% for(let j = 0; j < publisher[i].books.length; j++) { %>
         <tr>
-            <td><%= books[i].title %></td>
-            <td><%= books[i].author %></td>
-            <td>
-                <a href="/book/<%= books[i].id%>">View</a>
-                <a href="/update/<%= books[i].id%>">Edit</a>
-                <a href="/delete/<%= books[i].id%>">Delete</a>
-            </td>
+            <td><%= publisher[i].publisher %></td>
+            <td><%= publisher[i].address %></td>
+            <td><%= publisher[i].books[j].title %></td>
+            <td><%= publisher[i].books[j].author %></td>
         </tr>
+        <% } %>
+
         <% } %> 
     </table>
+    <a href="/">Back To Books</a>
     <a href="/create">Create New Book</a><br>
     <% if(data.username) { %>
         <p> Welcome back <%= data.username %></p>
