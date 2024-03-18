@@ -1,37 +1,16 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Books</title>
-    <link rel="stylesheet" href="../css/style.css">
-</head>
-<body>
-    <h1>Books</h1>
-    <table>
-        <tr>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Actions</th>
-        </tr>
-        <% for(var i=0; i < books.length; i++) { %>
-        <tr>
-            <td><%= books[i].title %></td>
-            <td><%= books[i].author %></td>
-            <td>
-                <a href="/book/<%= books[i].id%>">View</a>
-                <a href="/update/<%= books[i].id%>">Edit</a>
-                <a href="/delete/<%= books[i].id%>">Delete</a>
-            </td>
-        </tr>
-        <% } %> 
-    </table>
-    <a href="/create">Create New Book</a><br>
-    <% if(data.username) { %>
-        <p> Welcome back <%= data.username %></p>
-        <a href="/logout">Log out</a>
-    <% } else { %>
-        <a href="/login">Login Here</a>
-    <% } %>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book</title>
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
+  <body>
+    <h1><%= book.title %></h1>
+    <p>Author: <%= book.author %></p>
+    <a href="/update/<%= book.id%>">Edit</a>
+    <a href="/delete/<%= book.id %>">Delete</a>
+    <a href="/">Back to List</a>
+  </body>
 </html>
