@@ -7,9 +7,9 @@ const axios = require("axios");
 const path = require("path");
 const app = express();
 const cookie = require("cookie-parser");
-const fs = require("fs");
+// const fs = require("fs");
 var bodyParser = require("body-parser");
-const PBH = require("./publisher.json");
+// const PBH = require("./publisher.json");
 
 // Base URL for the API
 //const base_url = "https://api.example.com";
@@ -48,12 +48,14 @@ app.get("/", async (req, res) => {
     console.log(response);
 
     if (response.data == "") {
-      const databooks = JSON.parse(fs.readFileSync("books.json", "utf8"));
-      await axios.post(base_url + "/books", { bug: databooks });
+      // const databooks = JSON.parse(fs.readFileSync("books.json", "utf8"));
+      // await axios.post(base_url + "/books", { bug: databooks });
+      await axios.get(base_url + "/insertbooks");
     }
 
     if (responsePBH.data == "") {
-      await axios.post(base_url + "/publisher", { pbh: PBH });
+      // await axios.post(base_url + "/publisher", { pbh: PBH });
+      await axios.get(base_url + "/insertpublisher");
     }
 
     if (!req.session.userData) {

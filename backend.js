@@ -7,6 +7,8 @@
 const express = require("express");
 const Sequelize = require("sequelize");
 const app = express();
+const booksinsert = require("./books.json");
+const publisherinsert = require("./publisher.json");
 
 // parse incoming requests
 app.use(express.json()); // Json middleware which converts the body to JSON
@@ -114,6 +116,28 @@ app.get("/books/:id", (req, res) => {
     .catch((err) => {
       res.status(500).send(err);
     });
+});
+
+app.get("/insertbooks", (req, res) => {
+  try {
+    booksinsert.map(function (row) {
+      Book.create(row);
+    });
+    res.end();
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+app.get("/insertpublisher", (req, res) => {
+  try {
+    publisherinsert.map(function (row) {
+      Publisher.create(row);
+    });
+    res.end();
+  } catch (err) {
+    res.status(500).send(err);
+  }
 });
 
 app.post("/books", async (req, res) => {
